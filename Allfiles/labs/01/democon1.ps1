@@ -51,7 +51,12 @@ if (Test-Path $envFilePath) {
     Write-Host "Found .env file. Reading SQL password..."
     try {
         $envContent = Get-Content $envFilePath -ErrorAction Stop
-        $sqlPassword = ($envContent -match 'SQL_PASSWORD\s*=\s*(.+)') | Out-Null; $matches[1]
+        foreach ($line in $envContent) {
+            if ($line -match "^SQL_PASSWORD\s*=\s*(.+)$") {
+                $sqlPassword = $matches[1].Trim()
+                break
+            }
+        }
         if (-not $sqlPassword) {
             throw "SQL_PASSWORD variable not found in .env file."
         }
@@ -84,30 +89,6 @@ if (-not $sqlPassword) {
     }
 }
 
-# Register resource providers
-Write-Host "Registering resource providers...";
-$provider_list = "Microsoft.Synapse", "Microsoft.Sql", "Microsoft.Storage", "Microsoft.Compute"
-$maxRetries = 5
-$waittime = 30
-
-foreach ($provider in $provider_list) {
-    $retryCount = 0
-    while ($retryCount -lt $maxRetries) {
-        $currentStatus = (Get-AzResourceProvider -ProviderNamespace $provider).RegistrationState
-        if ($currentStatus -eq "Registered") {
-            Write-Host "$provider is successfully registered."
-            break
-        }
-        else {
-            Write-Host "$provider is not yet registered. Waiting for $waitTime seconds before rechecking..."
-            Start-Sleep -Seconds $waitTime
-            $retryCount++
-        }
-    }
-    if ($retryCount -eq $maxRetries) {
-        Write-Host "Failed to register $provider after $maxRetries attempts."
-    }
-}
 
 # Generate unique random suffix ending with "stvdemo1"
 [string]$suffix = "stvdemo1"
