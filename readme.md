@@ -1,6 +1,6 @@
 # DP-203: Azure Data Engineer
 
-1. This is a modified version of DP-203 with custom scripts to generate the Labs. 
+1. This is a modified version of DP-203 with custom scripts to generate the Labs/Demo. 
 
 2. This repository contains instructions and assets for hands-on exercises in the Microsoft Official Courseware to support the [Microsoft Certified: Azure Data Engineer Associate](https://learn.microsoft.com/certifications/azure-data-engineer/) certification. 
 
