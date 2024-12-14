@@ -12,4 +12,4 @@
 
 6. For some exercises, you may also need access to a [Microsoft Power BI tenant](https://learn.microsoft.com/power-bi/fundamentals/service-self-service-signup-for-power-bi).
 
-## Last Update **{{ "now" | date: "%Y-%m-%d" }}**.
+## Last Update 14/12/2024
