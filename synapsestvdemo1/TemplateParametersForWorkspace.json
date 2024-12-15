@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "synapsestvdemo1"
+		},
+		"synapsestvdemo1-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapsestvdemo1.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureDataLakestvdemo3_properties_typeProperties_url": {
+			"value": "https://datalakestvdemo3.dfs.core.windows.net/"
+		},
+		"AzureDataLakestvdemo4_properties_typeProperties_url": {
+			"value": "https://datalakestvdemo4.dfs.core.windows.net/"
+		},
+		"synapsestvdemo1-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://datalakestvdemo1.dfs.core.windows.net"
+		}
+	}
+}
