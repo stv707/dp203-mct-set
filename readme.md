@@ -14,5 +14,6 @@
 
 ## Last Update 14/12/2024
 
-* maintained by Steven: smahalin@redhat.com
-* www.steven.com.my
+* Upstream maintained by Microsoft Learning
+* This stream is maintained by Steven: smahalin@redhat.com
+* visit for more info about me: www.steven.com.my
