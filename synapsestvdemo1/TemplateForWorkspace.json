@@ -382,7 +382,7 @@
 							},
 							"Source": {
 								"Provider": "ADLS",
-								"Location": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB",
+								"Location": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB/Product",
 								"Properties": {
 									"FormatType": "csv",
 									"LinkedServiceName": "synapsestvdemo1-WorkspaceDefaultStorage"
@@ -539,7 +539,7 @@
 									"FormatType": "csv",
 									"SerializeLib": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
 									"Properties": {
-										"path": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB/RetailProduct",
+										"path": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB/Product/RetailProduct",
 										"delimiter": ",",
 										"multiLine": "false",
 										"firstRowAsHeader": "false",
@@ -552,7 +552,7 @@
 								},
 								"Source": {
 									"Provider": "ADLS",
-									"Location": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB/RetailProduct",
+									"Location": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB/Product/RetailProduct",
 									"Properties": {
 										"LinkedServiceName": "synapsestvdemo1-WorkspaceDefaultStorage",
 										"LocationSetToDatabaseDefault": true
