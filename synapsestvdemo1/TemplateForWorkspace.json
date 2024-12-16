@@ -342,6 +342,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) [ProductId]\n,[ProductName]\n,[IntroductionDate]\n,[ActualAbandonmentDate]\n,[ProductGrossWeight]\n,[ItemSku]\n,[ListPrice]\n FROM [RetailDB].[dbo].[RetailProduct]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "RetailDB",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/run_1')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -382,10 +402,10 @@
 							},
 							"Source": {
 								"Provider": "ADLS",
-								"Location": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB/Product",
+								"Location": "abfss://files@datalakestvdemo4.dfs.core.windows.net/RetailDB",
 								"Properties": {
 									"FormatType": "csv",
-									"LinkedServiceName": "synapsestvdemo1-WorkspaceDefaultStorage"
+									"LinkedServiceName": "AzureDataLakestvdemo4"
 								}
 							}
 						},
@@ -621,24 +641,6 @@
 			},
 			"dependsOn": [],
 			"location": "eastasia"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) [ProductId]\n,[ProductName]\n,[IntroductionDate]\n,[ActualAbandonmentDate]\n,[ProductGrossWeight]\n,[ItemSku]\n,[ListPrice]\n FROM [RetailDB].[dbo].[RetailProduct]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "RetailDB",
-						"poolName": "Built-in"
-					}
-				}
-			},
-			"dependsOn": []
 		}
 	]
 }
