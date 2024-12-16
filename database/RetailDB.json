@@ -12,10 +12,10 @@
 		},
 		"Source": {
 			"Provider": "ADLS",
-			"Location": "abfss://files@datalakestvdemo1.dfs.core.windows.net/RetailDB/Product",
+			"Location": "abfss://files@datalakestvdemo4.dfs.core.windows.net/RetailDB",
 			"Properties": {
 				"FormatType": "csv",
-				"LinkedServiceName": "synapsestvdemo1-WorkspaceDefaultStorage"
+				"LinkedServiceName": "AzureDataLakestvdemo4"
 			}
 		}
 	},
