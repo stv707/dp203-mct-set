@@ -45,47 +45,62 @@ write-host ""
 $sqlPassword = ""
 $complexPassword = 0
 
-while ($complexPassword -ne 1)
-{
-    $SqlPassword = Read-Host "Enter a password to use for the $sqlUser login.
-    `The password must meet complexity requirements:
-    ` - Minimum 8 characters. 
-    ` - At least one upper case English letter [A-Z]
-    ` - At least one lower case English letter [a-z]
-    ` - At least one digit [0-9]
-    ` - At least one special character (!,@,#,%,^,&,$)
-    ` "
+# Check for .env file and use the content for SQL password
+$envFilePath = "./.env"
 
-    if(($SqlPassword -cmatch '[a-z]') -and ($SqlPassword -cmatch '[A-Z]') -and ($SqlPassword -match '\d') -and ($SqlPassword.length -ge 8) -and ($SqlPassword -match '!|@|#|%|\^|&|\$'))
-    {
-        $complexPassword = 1
-	    Write-Output "Password $SqlPassword accepted. Make sure you remember this!"
-    }
-    else
-    {
-        Write-Output "$SqlPassword does not meet the complexity requirements."
+if (Test-Path $envFilePath) {
+    Write-Host "Found .env file. Reading SQL password..."
+    try {
+        $envContent = Get-Content $envFilePath -ErrorAction Stop
+        foreach ($line in $envContent) {
+            if ($line -match "^SQL_PASSWORD\s*=\s*(.+)$") {
+                $sqlPassword = $matches[1].Trim()
+                break
+            }
+        }
+        if (-not $sqlPassword) {
+            throw "SQL_PASSWORD variable not found in .env file."
+        }
+        Write-Output "SQL password loaded successfully."
+    } catch {
+        Write-Warning "Error reading .env file: $_"
+        $sqlPassword = ""
     }
 }
 
-# Register resource providers
-Write-Host "Registering resource providers...";
-$provider_list = "Microsoft.Synapse", "Microsoft.Sql", "Microsoft.Storage", "Microsoft.Compute"
-foreach ($provider in $provider_list){
-    $result = Register-AzResourceProvider -ProviderNamespace $provider
-    $status = $result.RegistrationState
-    Write-Host "$provider : $status"
+# Fallback to prompting for password if not found in .env file
+if (-not $sqlPassword) {
+    Write-Host "SQL password not found in .env file. Prompting for password..."
+    $complexPassword = 0
+    while ($complexPassword -ne 1) {
+        $SqlPassword = Read-Host "Enter a password to use for the SQLUser login.
+        `The password must meet complexity requirements:
+        ` - Minimum 8 characters. 
+        ` - At least one upper case English letter [A-Z]
+        ` - At least one lower case English letter [a-z]
+        ` - At least one digit [0-9]
+        ` - At least one special character (!,@,#,%,^,&,$)
+        ` "
+        if(($SqlPassword -cmatch '[a-z]') -and ($SqlPassword -cmatch '[A-Z]') -and ($SqlPassword -match '\d') -and ($SqlPassword.length -ge 8) -and ($SqlPassword -match '!|@|#|%|\^|&|\$')) {
+            $complexPassword = 1
+            Write-Output "Password $SqlPassword accepted. Make sure you remember this!"
+        } else {
+            Write-Output "$SqlPassword does not meet the complexity requirements."
+        }
+    }
 }
 
-# Generate unique random suffix
-[string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | % {[char]$_})
-Write-Host "Your randomly-generated suffix for Azure resources is $suffix"
+
+# Generate unique random suffix ending with "stvdemo11"
+[string]$suffix = "stvdemo11"
+Write-Host "Your custom suffix for Azure resources is $suffix"
 $resourceGroupName = "dp203-$suffix"
 
 # Choose a random region
 Write-Host "Finding an available region. This may take several minutes...";
 $delay = 0, 30, 60, 90, 120 | Get-Random
 Start-Sleep -Seconds $delay # random delay to stagger requests from multi-student classes
-$preferred_list = "australiaeast","centralus","southcentralus","eastus2","northeurope","southeastasia","uksouth","westeurope","westus","westus2"
+$preferred_list = "southeastasia","eastasia"
 $locations = Get-AzLocation | Where-Object {
     $_.Providers -contains "Microsoft.Synapse" -and
     $_.Providers -contains "Microsoft.Sql" -and
