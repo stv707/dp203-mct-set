@@ -45,32 +45,55 @@ foreach ($provider in $provider_list){
     $status = $result.RegistrationState
     Write-Host "$provider : $status"
 }
-
+## OLD 
 # Generate unique random suffix
-[string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | % {[char]$_})
-Write-Host "Your randomly-generated suffix for Azure resources is $suffix"
+# [string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | % {[char]$_})
+# Write-Host "Your randomly-generated suffix for Azure resources is $suffix"
 
-# Get a list of locations for Azure Databricks
+###Start NEW 
+# Generate unique random suffix ending with "stvdemo23"
+[string]$suffix = "stvdemo23"
+Write-Host "Your custom suffix for Azure resources is $suffix"
+$resourceGroupName = "dp203-$suffix"
+
+
+# Choose a random region
+Write-Host "Finding an available region. This may take several minutes...";
+$delay = 0, 30, 60, 90, 120 | Get-Random
+Start-Sleep -Seconds $delay # random delay to stagger requests from multi-student classes
+$preferred_list = "southeastasia","eastasia"
 $locations = Get-AzLocation | Where-Object {
     $_.Providers -contains "Microsoft.Databricks" -and
     $_.Providers -contains "Microsoft.Compute"
+    $_.Location -in $preferred_list
 }
-
-# Choose a region
-Write-Host "Preparing to deploy. This may take several minutes...";
-$delay = 0, 30, 60, 90, 120 | Get-Random
-Start-Sleep -Seconds $delay # random delay to stagger requests from multi-student classes
 $max_index = $locations.Count - 1
 $rand = (0..$max_index) | Get-Random
+$Region = $locations.Get($rand).Location
+
+### END NEW 
+
+# Get a list of locations for Azure Databricks
+#$locations = Get-AzLocation | Where-Object {
+#    $_.Providers -contains "Microsoft.Databricks" -and
+#    $_.Providers -contains "Microsoft.Compute"
+#}
+
+# Choose a region
+#Write-Host "Preparing to deploy. This may take several minutes...";
+#$delay = 0, 30, 60, 90, 120 | Get-Random
+#Start-Sleep -Seconds $delay # random delay to stagger requests from multi-student classes
+#$max_index = $locations.Count - 1
+#$rand = (0..$max_index) | Get-Random
 
 # Start with preferred region if specified, otherwise choose one at random
-if ($args.count -gt 0 -And $args[0] -in $locations.Location)
-{
-    $Region = $args[0]
-}
-else {
-    $Region = $locations.Get($rand).Location
-}
+#if ($args.count -gt 0 -And $args[0] -in $locations.Location)
+#{
+#    $Region = $args[0]
+#}
+#else {
+#    $Region = $locations.Get($rand).Location
+#}
 
 # Try to create an Azure Databricks workspace in a region that has capacity
 $stop = 0
